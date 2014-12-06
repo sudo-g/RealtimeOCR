@@ -8,6 +8,8 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.core.Mat;
 
+import com.googlecode.tesseract.android.TessBaseAPI;
+
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +39,7 @@ public class MainActivity extends ActionBarActivity implements CvCameraViewListe
             }
         }
     };
-	
+    TessBaseAPI baseApi;	// interface to OCR engine
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,21 +86,22 @@ public class MainActivity extends ActionBarActivity implements CvCameraViewListe
 
 	@Override
 	public void onCameraViewStarted(int width, int height) {
-		// TODO Auto-generated method stub
-		
+		baseApi = new TessBaseAPI();	// instantiate OCR engine
 	}
 
 
 	@Override
 	public void onCameraViewStopped() {
-		// TODO Auto-generated method stub
-		
+		baseApi.end();					// frees OCR engine instance
 	}
 
 
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		// TODO Auto-generated method stub
+		Mat image = inputFrame.rgba();
+		
+		
 		return inputFrame.rgba();
 	}
 }
