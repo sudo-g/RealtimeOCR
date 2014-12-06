@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity implements CvCameraViewListener2 {
@@ -91,8 +92,15 @@ public class MainActivity extends ActionBarActivity implements CvCameraViewListe
         		out.close();
         		
         		Log.v(TAG, "Copied " + lang + " traineddata");
+        		
+        		Toast toast = Toast.makeText(getApplicationContext(), "Successfully initiated training data", Toast.LENGTH_SHORT);
+        		toast.show();
+        		
         	} catch (IOException e) {
         		Log.e(TAG, "Was unable to copy " + lang + " traineddata " + e.toString());
+        		
+        		Toast toast = Toast.makeText(getApplicationContext(), "Error initializing training data", Toast.LENGTH_SHORT);
+        		toast.show();
         	}
         }
         
@@ -155,13 +163,14 @@ public class MainActivity extends ActionBarActivity implements CvCameraViewListe
 		
 		// Grab frame capture and convert to form usable by OCR engine
 		work = inputFrame.rgba();
-		Bitmap bmpImg = null;
+		Bitmap bmpImg = Bitmap.createBitmap(work.cols(), work.rows(), Bitmap.Config.ARGB_8888);
 		Utils.matToBitmap(work, bmpImg);
 		
 		baseApi.setImage(bmpImg);
 		String recognizedText = baseApi.getUTF8Text();
 		baseApi.end();				// frees OCR engine instance
 		
+		Log.i(TAG, "Recognized text = " + recognizedText);		
 		
 		return inputFrame.rgba();
 	}
